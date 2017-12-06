@@ -8,7 +8,8 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, Redirect } from 'react-router-dom';
+import {withRouter} from "react-router";
 
 import SideBarMenu from './components/SideBarMenu';
 import Library from './components/Library';
@@ -38,6 +39,7 @@ class App extends Component {
 
     this.state = {
       openMenu: false,
+      authenticated: false,
     }
   }
 
@@ -48,8 +50,25 @@ class App extends Component {
     });
   }
 
+  login(){
+    console.log('history1111: ', this.props.history);
+    this.setState({
+      authenticated: true
+    });
+
+    this.props.history.push('/profile');
+
+  }
+
+  logout() {
+    this.setState({
+      authenticated: false
+    });
+  }
+
   render() {
     const {classes} = this.props;
+    const isAuthenticated = this.state.authenticated;
 
     return (
       <div className={classes.root}>
@@ -65,7 +84,9 @@ class App extends Component {
             <Typography type="title" color="inherit" className={classes.flex}>
               My Library
             </Typography>
-            <Button color="contrast">Login</Button>
+            {
+              !isAuthenticated ? (<Button color="contrast" onClick={this.login.bind(this)}>Login</Button>) : (<Button color="contrast" onClick={this.logout.bind(this)}>Logout</Button>)
+            }
           </Toolbar>
         </AppBar>
         
@@ -73,7 +94,7 @@ class App extends Component {
 
         <Switch>
           <Route exact path='/' component={Library}/>
-          <Route path='/profile' component={Profile}/>
+          <PrivateRoute isAuthenticated={this.state.authenticated} path='/profile' component={Profile}/>
           {/* <Route path='/roster' component={Roster}/>
           <Route path='/schedule' component={Schedule}/> */}
         </Switch>
@@ -85,4 +106,12 @@ class App extends Component {
   
 }
 
-export default withStyles(App.styles)(App);
+const PrivateRoute = ({ component: Component, isAuthenticated: isAuthenticated, ...rest }) => (
+  <Route {...rest} render={(props) => (
+    isAuthenticated
+      ? <Component {...props} />
+      : <Redirect to='/' />
+  )} />
+)
+
+export default withRouter(withStyles(App.styles)(App));
