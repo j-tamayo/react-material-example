@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
@@ -6,7 +7,7 @@ import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
 import { FormControl } from 'material-ui/Form';
 import Input, { InputLabel } from 'material-ui/Input';
-import Button from 'material-ui/Button'
+import Button from 'material-ui/Button';
 
 const styles = theme => ({
     root: {
@@ -84,4 +85,11 @@ class Login extends Component {
     }
 }
 
-export default withStyles(styles)(Login);
+function mapStateToProps(state) {
+    console.log(state);
+    return {
+        state
+    }
+}
+
+export default withStyles(styles)(connect(mapStateToProps, null)(Login));
