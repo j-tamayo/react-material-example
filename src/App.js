@@ -14,6 +14,7 @@ import {withRouter} from "react-router";
 import SideBarMenu from './components/SideBarMenu';
 import Library from './components/Library';
 import Profile from './components/Profile';
+import Login from './components/Login';
 
 class App extends Component {
   static styles = theme => ({
@@ -93,7 +94,7 @@ class App extends Component {
         <SideBarMenu openMenu={this.state.openMenu} toggleMenu={this.toggleSideBarMenu.bind(this)}/>
 
         <Switch>
-          <Route exact path='/' component={Library}/>
+          <Route exact path='/' component={Login}/>
           <PrivateRoute isAuthenticated={this.state.authenticated} path='/profile' component={Profile}/>
           {/* <Route path='/roster' component={Roster}/>
           <Route path='/schedule' component={Schedule}/> */}
